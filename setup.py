@@ -9,5 +9,5 @@ setup(
     author='olcay',
     author_email='olcaytaner@isikun.edu.tr',
     description='Turkish Morphological Disambiguation Library',
-    requires='NlpToolkit-MorphologicalAnalysis'
+    requires=['NlpToolkit-MorphologicalAnalysis', 'NlpToolkit-NGram']
 )
