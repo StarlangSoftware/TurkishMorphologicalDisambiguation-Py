@@ -15,24 +15,25 @@ class RootFirstDisambiguation(NaiveDisambiguation):
     wordBiGramModel: NGram
     igBiGramModel: NGram
 
-    """
-    The train method initially creates new NGrams; wordUniGramModel, wordBiGramModel, igUniGramModel, and igBiGramModel. 
-    It gets the sentences from given corpus and gets each word as a DisambiguatedWord. Then, adds the word together with 
-    its part of speech tags to the wordUniGramModel. It also gets the transition list of that word and adds it to the 
-    igUniGramModel.
-
-    If there exists a next word in the sentence, it adds the current and next {@link DisambiguatedWord} to the 
-    wordBiGramModel with their part of speech tags. It also adds them to the igBiGramModel with their transition lists.
-
-    At the end, it calculates the NGram probabilities of both word and ig unigram models by using LaplaceSmoothing, and
-    both word and ig bigram models by using InterpolatedSmoothing.
-
-    PARAMETERS
-    ----------
-    corpus : DisambiguationCorpus
-        DisambiguationCorpus to train.
-    """
     def train(self, corpus: DisambiguationCorpus):
+        """
+        The train method initially creates new NGrams; wordUniGramModel, wordBiGramModel, igUniGramModel, and
+        igBiGramModel. It gets the sentences from given corpus and gets each word as a DisambiguatedWord. Then, adds the
+        word together with its part of speech tags to the wordUniGramModel. It also gets the transition list of that
+        word and adds it to the igUniGramModel.
+
+        If there exists a next word in the sentence, it adds the current and next {@link DisambiguatedWord} to the
+        wordBiGramModel with their part of speech tags. It also adds them to the igBiGramModel with their transition
+        lists.
+
+        At the end, it calculates the NGram probabilities of both word and ig unigram models by using LaplaceSmoothing,
+        and both word and ig bigram models by using InterpolatedSmoothing.
+
+        PARAMETERS
+        ----------
+        corpus : DisambiguationCorpus
+            DisambiguationCorpus to train.
+        """
         words = []
         igs = []
         self.wordUniGramModel = NGram(1)
@@ -57,68 +58,68 @@ class RootFirstDisambiguation(NaiveDisambiguation):
         self.wordBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
         self.igBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
 
-    """
-    The getWordProbability method returns the probability of a word by using word bigram or unigram model.
-
-    PARAMETERS
-    ----------
-    word : Word            
-        Word to find the probability.
-    correctFsmParses : list
-        FsmParse of given word which will be used for getting part of speech tags.
-    index : int           
-        Index of FsmParse of which part of speech tag will be used to get the probability.
-        
-    RETURNS
-    -------
-    float
-        The probability of the given word.
-    """
     def getWordProbability(self, word: Word, correctFsmParses: list, index: int) -> float:
+        """
+        The getWordProbability method returns the probability of a word by using word bigram or unigram model.
+
+        PARAMETERS
+        ----------
+        word : Word
+            Word to find the probability.
+        correctFsmParses : list
+            FsmParse of given word which will be used for getting part of speech tags.
+        index : int
+            Index of FsmParse of which part of speech tag will be used to get the probability.
+
+        RETURNS
+        -------
+        float
+            The probability of the given word.
+        """
         if index != 0 and len(correctFsmParses) == index:
             return self.wordBiGramModel.getProbability(correctFsmParses[index - 1].getWordWithPos(), word)
         else:
             return self.wordUniGramModel.getProbability(word)
 
-    """
-    The getIgProbability method returns the probability of a word by using ig bigram or unigram model.
-
-    PARAMETERS
-    ----------
-    word : Word            
-        Word to find the probability.
-    correctFsmParses : list
-        FsmParse of given word which will be used for getting transition list.
-    index : int           
-        Index of FsmParse of which transition list will be used to get the probability.
-        
-    RETURNS
-    -------
-    float
-        The probability of the given word.
-    """
     def getIgProbability(self, word: Word, correctFsmParses: list, index: int) -> float:
+        """
+        The getIgProbability method returns the probability of a word by using ig bigram or unigram model.
+
+        PARAMETERS
+        ----------
+        word : Word
+            Word to find the probability.
+        correctFsmParses : list
+            FsmParse of given word which will be used for getting transition list.
+        index : int
+            Index of FsmParse of which transition list will be used to get the probability.
+
+        RETURNS
+        -------
+        float
+            The probability of the given word.
+        """
         if index != 0 and len(correctFsmParses) == index:
             return self.igBiGramModel.getProbability(Word(correctFsmParses[index - 1].getTransitionList()), word)
         else:
             return self.igUniGramModel.getProbability(word)
 
-    """
-    The getBestRootWord method takes a FsmParseList as an input and loops through the list. It gets each word with its
-    part of speech tags as a new Word word and its transition list as a Word ig. Then, finds their corresponding
-    probabilities. At the end returns the word with the highest probability.
-
-    PARAMETERS
-    ----------
-    fsmParseList : FsmParseList
-        FsmParseList is used to get the part of speech tags and transition lists of words.
-        
-    RETURNS
-    -------
-    Word
-        The word with the highest probability.
-    """
     def getBestRootWord(self, fsmParseList: FsmParseList) -> Word:
+        """
+        The getBestRootWord method takes a FsmParseList as an input and loops through the list. It gets each word with
+        its part of speech tags as a new Word word and its transition list as a Word ig. Then, finds their corresponding
+        probabilities. At the end returns the word with the highest probability.
+
+        PARAMETERS
+        ----------
+        fsmParseList : FsmParseList
+            FsmParseList is used to get the part of speech tags and transition lists of words.
+
+        RETURNS
+        -------
+        Word
+            The word with the highest probability.
+        """
         bestProbability = -1
         bestWord = None
         for j in range(fsmParseList.size()):
@@ -132,25 +133,25 @@ class RootFirstDisambiguation(NaiveDisambiguation):
                 bestProbability = probability
         return bestWord
 
-    """
-    The getParseWithBestIgProbability gets each FsmParse's transition list as a Word ig. Then, finds the corresponding
-    probability. At the end returns the parse with the highest ig probability.
-
-    PARAMETERS
-    ----------
-    parseList : FsmParseList       
-        FsmParseList is used to get the FsmParse.
-    correctFsmParses : list
-        FsmParse is used to get the transition lists.
-    index : int           
-        Index of FsmParse of which transition list will be used to get the probability.
-        
-    RETURNS
-    -------
-    FsmParse
-        The parse with the highest probability.
-    """
     def getParseWithBestIgProbability(self, parseList: FsmParseList, correctFsmParses: list, index: int) -> FsmParse:
+        """
+        The getParseWithBestIgProbability gets each FsmParse's transition list as a Word ig. Then, finds the
+        corresponding probability. At the end returns the parse with the highest ig probability.
+
+        PARAMETERS
+        ----------
+        parseList : FsmParseList
+            FsmParseList is used to get the FsmParse.
+        correctFsmParses : list
+            FsmParse is used to get the transition lists.
+        index : int
+            Index of FsmParse of which transition list will be used to get the probability.
+
+        RETURNS
+        -------
+        FsmParse
+            The parse with the highest probability.
+        """
         bestParse = None
         bestProbability = -1
         for j in range(parseList.size()):
@@ -161,22 +162,22 @@ class RootFirstDisambiguation(NaiveDisambiguation):
                 bestProbability = probability
         return bestParse
 
-    """
-    The disambiguate method gets an array of fsmParses. Then loops through that parses and finds the most probable root
-    word and removes the other words which are identical to the most probable root word. At the end, gets the most 
-    probable parse among the fsmParses and adds it to the correctFsmParses list.
-
-    PARAMETERS
-    ----------
-    fsmParses : list
-        FsmParseList to disambiguate.
-        
-    RETURNS
-    -------
-    list
-        CcorrectFsmParses list which holds the most probable parses.
-    """
     def disambiguate(self, fsmParses: list) -> list:
+        """
+        The disambiguate method gets an array of fsmParses. Then loops through that parses and finds the most probable
+        root word and removes the other words which are identical to the most probable root word. At the end, gets the
+        most probable parse among the fsmParses and adds it to the correctFsmParses list.
+
+        PARAMETERS
+        ----------
+        fsmParses : list
+            FsmParseList to disambiguate.
+
+        RETURNS
+        -------
+        list
+            CcorrectFsmParses list which holds the most probable parses.
+        """
         correctFsmParses = []
         for i in range(len(fsmParses)):
             bestWord = self.getBestRootWord(fsmParses[i])

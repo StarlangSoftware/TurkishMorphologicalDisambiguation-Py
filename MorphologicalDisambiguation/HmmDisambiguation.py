@@ -1,7 +1,6 @@
 import math
 
 from Dictionary.Word import Word
-from MorphologicalAnalysis.FsmParseList import FsmParseList
 from MorphologicalAnalysis.FsmParse import FsmParse
 from NGram.InterpolatedSmoothing import InterpolatedSmoothing
 from NGram.LaplaceSmoothing import LaplaceSmoothing
@@ -13,23 +12,23 @@ from MorphologicalDisambiguation.NaiveDisambiguation import NaiveDisambiguation
 
 class HmmDisambiguation(NaiveDisambiguation):
 
-    wordBiGramModel : NGram
-    igBiGramModel : NGram
+    wordBiGramModel: NGram
+    igBiGramModel: NGram
 
-    """
-    The train method gets sentences from given DisambiguationCorpus and both word and the next word of that sentence at 
-    each iteration. Then, adds these words together with their part of speech tags to word unigram and bigram models. 
-    It also adds the last inflectional group of word to the ig unigram and bigram models.
-
-    At the end, it calculates the NGram probabilities of both word and ig unigram models by using LaplaceSmoothing, and
-    both word and ig bigram models by using InterpolatedSmoothing.
-
-    PARAMETERS
-    ----------
-    corpus : DisambiguationCorpus
-        DisambiguationCorpus to train.
-    """
     def train(self, corpus: DisambiguationCorpus):
+        """
+        The train method gets sentences from given DisambiguationCorpus and both word and the next word of that sentence
+        at each iteration. Then, adds these words together with their part of speech tags to word unigram and bigram
+        models. It also adds the last inflectional group of word to the ig unigram and bigram models.
+
+        At the end, it calculates the NGram probabilities of both word and ig unigram models by using LaplaceSmoothing,
+        and both word and ig bigram models by using InterpolatedSmoothing.
+
+        PARAMETERS
+        ----------
+        corpus : DisambiguationCorpus
+            DisambiguationCorpus to train.
+        """
         words = []
         igs = []
         self.wordUniGramModel = NGram(1)
@@ -55,23 +54,23 @@ class HmmDisambiguation(NaiveDisambiguation):
         self.wordBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
         self.igBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
 
-    """
-    The disambiguate method takes FsmParseList as an input and gets one word with its part of speech tags, then gets 
-    its probability from word unigram model. It also gets ig and its probability. Then, hold the logarithmic value of 
-    the product of these probabilities in an array. Also by taking into consideration the parses of these word it 
-    recalculates the probabilities and returns these parses.
-
-    PARAMETERS
-    ----------
-    fsmParses : list
-        FsmParseList to disambiguate.
-        
-    RETURNS
-    -------
-    list
-        List of FsmParses.
-    """
     def disambiguate(self, fsmParses: list) -> list:
+        """
+        The disambiguate method takes FsmParseList as an input and gets one word with its part of speech tags, then gets
+        its probability from word unigram model. It also gets ig and its probability. Then, hold the logarithmic value
+        of the product of these probabilities in an array. Also by taking into consideration the parses of these word it
+        recalculates the probabilities and returns these parses.
+
+        PARAMETERS
+        ----------
+        fsmParses : list
+            FsmParseList to disambiguate.
+
+        RETURNS
+        -------
+        list
+            List of FsmParses.
+        """
         if len(fsmParses) == 0:
             return None
         for i in range(len(fsmParses)):

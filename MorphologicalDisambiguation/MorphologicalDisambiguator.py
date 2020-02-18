@@ -5,31 +5,30 @@ from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpu
 
 class MorphologicalDisambiguator:
 
-
-    """
-    Method to train the given DisambiguationCorpus.
-
-    PARAMETERS
-    ----------
-    corpus : DisambiguationCorpus
-        DisambiguationCorpus to train.
-    """
     @abstractmethod
     def train(self, corpus: DisambiguationCorpus):
+        """
+        Method to train the given DisambiguationCorpus.
+
+        PARAMETERS
+        ----------
+        corpus : DisambiguationCorpus
+            DisambiguationCorpus to train.
+        """
         pass
 
-    """
-    Method to disambiguate the given FsmParseList.
-
-    PARAMETERS
-    ----------
-    fsmParses : list
-        FsmParseList to disambiguate.
-        
-    RETURNS
-    -------
-    list
-        List of FsmParse.
-    """
     def disambiguate(self, fsmParses: list) -> list:
+        """
+        Method to disambiguate the given FsmParseList.
+
+        PARAMETERS
+        ----------
+        fsmParses : list
+            FsmParseList to disambiguate.
+
+        RETURNS
+        -------
+        list
+            List of FsmParse.
+        """
         pass

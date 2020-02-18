@@ -7,15 +7,15 @@ from MorphologicalDisambiguation.DisambiguatedWord import DisambiguatedWord
 
 class DisambiguationCorpus(Corpus):
 
-
-    """
-    Constructor which creates a list of sentences and a CounterHashMap of wordList.
-    """
     def __init__(self, fileName=None):
+        """
+        Constructor which creates a list of sentences and a CounterHashMap of wordList.
+        """
         super().__init__()
         if fileName is not None:
             inputFile = open(fileName, "r", encoding="utf8")
             lines = inputFile.readlines()
+            newSentence = Sentence()
             for line in lines:
                 word = line[:line.index("\\t")]
                 parse = line[line.index("\\t") + 1:]
@@ -31,16 +31,16 @@ class DisambiguationCorpus(Corpus):
                         newSentence.addWord(newWord)
             inputFile.close()
 
-    """
-    The writeToFile method takes a str file name as an input and writes the elements of sentences list
-    to this file with proper tags which indicates the beginnings and endings of the document and sentence.
-
-    PARAMETERS
-    ----------
-    fileName : str
-        File which will be filled with the sentences.
-    """
     def writeToFile(self, fileName: str):
+        """
+        The writeToFile method takes a str file name as an input and writes the elements of sentences list
+        to this file with proper tags which indicates the beginnings and endings of the document and sentence.
+
+        PARAMETERS
+        ----------
+        fileName : str
+            File which will be filled with the sentences.
+        """
         outputFile = open(fileName, "w", encoding="utf8")
         outputFile.write("<DOC>\t<DOC>+BDTag\n")
         for sentence in self.sentences:
