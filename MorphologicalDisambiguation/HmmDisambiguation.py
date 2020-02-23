@@ -2,7 +2,6 @@ import math
 
 from Dictionary.Word import Word
 from MorphologicalAnalysis.FsmParse import FsmParse
-from NGram.InterpolatedSmoothing import InterpolatedSmoothing
 from NGram.LaplaceSmoothing import LaplaceSmoothing
 from NGram.NGram import NGram
 
@@ -29,8 +28,10 @@ class HmmDisambiguation(NaiveDisambiguation):
         corpus : DisambiguationCorpus
             DisambiguationCorpus to train.
         """
-        words = []
-        igs = []
+        words1 = [None]
+        igs1 = [None]
+        words2 = [None, None]
+        igs2 = [None, None]
         self.wordUniGramModel = NGram(1)
         self.igUniGramModel = NGram(1)
         self.wordBiGramModel = NGram(2)
@@ -39,20 +40,21 @@ class HmmDisambiguation(NaiveDisambiguation):
             for j in range(sentence.wordCount() - 1):
                 word = sentence.getWord(j)
                 nextWord = sentence.getWord(j + 1)
-                words.append(word.getParse().getWordWithPos())
-                words.append(nextWord.getParse().getWordWithPos())
-                self.wordUniGramModel.addNGram(words)
-                self.wordBiGramModel.addNGram(words)
+                words2[0] = word.getParse().getWordWithPos()
+                words1[0] = words2[0]
+                words2[1] = nextWord.getParse().getWordWithPos()
+                self.wordUniGramModel.addNGram(words1)
+                self.wordBiGramModel.addNGram(words2)
                 for k in range(nextWord.getParse().size()):
-                    igs.append(Word(word.getParse().getLastInflectionalGroup().__str__()))
-                    igs.append(Word(nextWord.getParse().getInflectionalGroup(k).__str__()))
-                    self.igBiGramModel.addNGram(igs)
-                    igs[0] = igs[1]
-                    self.igUniGramModel.addNGram(igs)
+                    igs2[0] = Word(word.getParse().getLastInflectionalGroup().__str__())
+                    igs2[1] = Word(nextWord.getParse().getInflectionalGroup(k).__str__())
+                    self.igBiGramModel.addNGram(igs2)
+                    igs1[0] = igs2[1]
+                    self.igUniGramModel.addNGram(igs1)
         self.wordUniGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
         self.igUniGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
-        self.wordBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
-        self.igBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
+        self.wordBiGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
+        self.igBiGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
 
     def disambiguate(self, fsmParses: list) -> list:
         """
@@ -123,3 +125,19 @@ class HmmDisambiguation(NaiveDisambiguation):
                 return None
             correctFsmParses.insert(0, fsmParses[i].getFsmParse(bestIndex))
         return correctFsmParses
+
+    def saveModel(self):
+        """
+        Method to save unigrams and bigrams.
+        """
+        super().saveModel()
+        self.wordBiGramModel.saveAsText("words2.txt")
+        self.igBiGramModel.saveAsText("igs2.txt")
+
+    def loadModel(self):
+        """
+        Method to load unigrams and bigrams.
+        """
+        super().loadModel()
+        self.wordBiGramModel = NGram("words2.txt")
+        self.igBiGramModel = NGram("igs2.txt")

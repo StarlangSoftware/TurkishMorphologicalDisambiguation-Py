@@ -17,6 +17,7 @@ class MorphologicalDisambiguator:
         """
         pass
 
+    @abstractmethod
     def disambiguate(self, fsmParses: list) -> list:
         """
         Method to disambiguate the given FsmParseList.
@@ -30,5 +31,19 @@ class MorphologicalDisambiguator:
         -------
         list
             List of FsmParse.
+        """
+        pass
+
+    @abstractmethod
+    def saveModel(self):
+        """
+        Method to save a model.
+        """
+        pass
+
+    @abstractmethod
+    def loadModel(self):
+        """
+        Method to load a model.
         """
         pass

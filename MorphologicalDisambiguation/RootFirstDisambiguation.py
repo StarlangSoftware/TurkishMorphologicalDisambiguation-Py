@@ -34,8 +34,10 @@ class RootFirstDisambiguation(NaiveDisambiguation):
         corpus : DisambiguationCorpus
             DisambiguationCorpus to train.
         """
-        words = []
-        igs = []
+        words1 = [None]
+        igs1 = [None]
+        words2 = [None, None]
+        igs2 = [None, None]
         self.wordUniGramModel = NGram(1)
         self.wordBiGramModel = NGram(2)
         self.igUniGramModel = NGram(1)
@@ -44,15 +46,17 @@ class RootFirstDisambiguation(NaiveDisambiguation):
             for j in range(sentence.wordCount()):
                 word = sentence.getWord(j)
                 if isinstance(word, DisambiguatedWord):
-                    words.append(word.getParse().getWordWithPos())
-                    self.wordUniGramModel.addNGram(words)
-                    igs.append(Word(word.getParse().getTransitionList()))
-                    self.igUniGramModel.addNGram(igs)
+                    words1[0] = word.getParse().getWordWithPos()
+                    self.wordUniGramModel.addNGram(words1)
+                    igs1[0] = Word(word.getParse().getTransitionList())
+                    self.igUniGramModel.addNGram(igs1)
                     if j + 1 < sentence.wordCount():
-                        words.append(sentence.getWord(j + 1).getParse().getWordWithPos())
-                        self.wordBiGramModel.addNGram(words)
-                        igs.append(Word(sentence.getWord(j + 1).getParse().getTransitionList()))
-                        self.igBiGramModel.addNGram(igs)
+                        words2[0] = words1[0]
+                        words2[1] = sentence.getWord(j + 1).getParse().getWordWithPos()
+                        self.wordBiGramModel.addNGram(words2)
+                        igs2[0] = igs1[0]
+                        igs2[1] = Word(sentence.getWord(j + 1).getParse().getTransitionList())
+                        self.igBiGramModel.addNGram(igs2)
         self.wordUniGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
         self.igUniGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
         self.wordBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
@@ -186,3 +190,19 @@ class RootFirstDisambiguation(NaiveDisambiguation):
             if bestParse is not None:
                 correctFsmParses.append(bestParse)
         return correctFsmParses
+
+    def saveModel(self):
+        """
+        Method to save unigrams and bigrams.
+        """
+        super().saveModel()
+        self.wordBiGramModel.saveAsText("words2.txt")
+        self.igBiGramModel.saveAsText("igs2.txt")
+
+    def loadModel(self):
+        """
+        Method to load unigrams and bigrams.
+        """
+        super().loadModel()
+        self.wordBiGramModel = NGram("words2.txt")
+        self.igBiGramModel = NGram("igs2.txt")
