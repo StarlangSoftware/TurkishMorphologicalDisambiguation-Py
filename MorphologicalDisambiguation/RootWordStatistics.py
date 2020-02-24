@@ -6,11 +6,26 @@ class RootWordStatistics:
 
     __statistics: map
 
-    def __init__(self):
+    def __init__(self, fileName=None):
         """
         Constructor of RootWordStatistics class that generates a new map for statistics.
         """
         self.__statistics = {}
+        if fileName is not None:
+            inputFile = open(fileName, encoding="utf8")
+            size = int(inputFile.readline().strip())
+            for i in range(size):
+                line = inputFile.readline().strip()
+                items = line.split()
+                rootWord = items[0]
+                count = int(items[1])
+                wordMap = CounterHashMap()
+                for j in range(count):
+                    line = inputFile.readline().strip()
+                    items = line.split()
+                    wordMap.putNTimes(items[0], int(items[1]))
+                self.__statistics[rootWord] = wordMap
+            inputFile.close()
 
     def containsKey(self, key: str) -> bool:
         """
@@ -79,3 +94,20 @@ class RootWordStatistics:
             rootWordStatistics = self.__statistics[rootWords]
             return rootWordStatistics.max(threshold)
         return None
+
+    def saveStatistics(self, fileName: str):
+        """
+        Method to save statistics into file specified with the input file name.
+
+        PARAMETERS
+        ----------
+        fileName : str
+            File to save the statistics.
+        """
+        outputFile = open(fileName, mode="w", encoding="utf8")
+        outputFile.write(len(self.__statistics).__str__() + "\n")
+        for rootWord in self.__statistics:
+            wordMap = self.__statistics[rootWord]
+            outputFile.write(rootWord + " " + len(wordMap).__str__() + "\n")
+            outputFile.write(wordMap.__str__())
+        outputFile.close()
