@@ -121,7 +121,7 @@ A sentence can be disambiguated as follows:
     print("Parses after disambiguation\n")
     print("--------------------------"\n)
     for i in range(candidateParses.size()):
-        print(candidateParses.get(i))
+        print(candidateParses.get(i) + "\n")
 
 Output
 
