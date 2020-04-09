@@ -33,12 +33,7 @@ class LongestRootFirstDisambiguation(MorphologicalDisambiguator):
         """
         correctFsmParses = []
         for fsmParseList in fsmParses:
-            maxLength = -1
-            bestParse = None
-            for i in range(fsmParseList.size()):
-                if len(fsmParseList.getFsmParse(i).getWord().getName()) > maxLength:
-                    maxLength = len(fsmParseList.getFsmParse(i).getWord().getName())
-                    bestParse = fsmParseList.getFsmParse(i)
+            bestParse = fsmParseList.getParseWithLongestRootWord()
             if bestParse is not None:
                 correctFsmParses.append(bestParse)
         return correctFsmParses
