@@ -50,7 +50,7 @@ Use Git for cloning the code to your local or below line for Ubuntu:
 
 A directory called MorphologicalDisambiguation will be created. Or you can use below link for exploring the code:
 
-	git clone https://github.com/olcaytaner/TurkishMorphologicalDisambiguation-Py.git
+	git clone https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-Py.git
 
 ## Open project with Pycharm IDE
 
@@ -60,14 +60,7 @@ Steps for opening the cloned project:
 * Select **File | Open** from main menu
 * Choose `DataStructure-PY` file
 * Select open as project option
-* Couple of seconds, dependencies will be downloaded. 
-
-
-## Compile
-
-**From IDE**
-
-After being done with the downloading and Maven indexing, select **Build Project** option from **Build** menu. After compilation process, user can run DataStructure.
+* Couple of seconds, project will be downloaded. 
 
 Detailed Description
 ============
@@ -107,7 +100,7 @@ To train the disambiguator, an instance of `DisambiguationCorpus` object is need
       
 ## Sentence Disambiguation
 
-To disambiguate a sentence, a `FsmMorphologicalAnalyzer` instance is required. This can be created as below, further information can be found [here](https://github.com/olcaytaner/MorphologicalAnalysis/blob/master/README.md#creating-fsmmorphologicalanalyzer).
+To disambiguate a sentence, a `FsmMorphologicalAnalyzer` instance is required. This can be created as below, further information can be found [here](https://github.com/starlangsoftware/MorphologicalAnalysis/blob/master/README.md#creating-fsmmorphologicalanalyzer).
 
     fsm = FsmMorphologicalAnalyzer()
     
