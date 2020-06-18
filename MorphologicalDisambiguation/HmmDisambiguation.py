@@ -91,8 +91,8 @@ class HmmDisambiguation(NaiveDisambiguation):
                     probability *= self.igUniGramModel.getProbability(ig1)
                 probabilities[0][i] = math.log(probability)
         for i in range(1, len(fsmParses)):
-            for j in range(len(fsmParses)):
-                bestProbability = -1
+            for j in range(fsmParses[i].size()):
+                bestProbability = -10000
                 bestIndex = -1
                 currentParse = fsmParses[i].getFsmParse(j)
                 if isinstance(currentParse, FsmParse):
@@ -110,7 +110,7 @@ class HmmDisambiguation(NaiveDisambiguation):
                             bestProbability = probability
                 probabilities[i][j] = bestProbability
                 best[i][j] = bestIndex
-        bestProbability = -1
+        bestProbability = -10000
         bestIndex = -1
         for i in range(fsmParses[len(fsmParses) - 1].size()):
             if probabilities[len(fsmParses) - 1][i] > bestProbability:

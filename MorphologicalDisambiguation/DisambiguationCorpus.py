@@ -17,10 +17,10 @@ class DisambiguationCorpus(Corpus):
             lines = inputFile.readlines()
             newSentence = Sentence()
             for line in lines:
-                word = line[:line.index("\\t")]
-                parse = line[line.index("\\t") + 1:]
+                word = line[:line.index("\t")]
+                parse = line[line.index("\t") + 1:]
                 if len(word) > 0 and len(parse) > 0:
-                    newWord = DisambiguatedWord(word, MorphologicalParse(parse))
+                    newWord = DisambiguatedWord(word, MorphologicalParse(parse.strip()))
                     if word == "<S>":
                         newSentence = Sentence()
                     elif word == "</S>":

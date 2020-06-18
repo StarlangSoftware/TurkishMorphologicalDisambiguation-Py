@@ -1,7 +1,6 @@
 from Dictionary.Word import Word
 from MorphologicalAnalysis.FsmParse import FsmParse
 from MorphologicalAnalysis.FsmParseList import FsmParseList
-from NGram.InterpolatedSmoothing import InterpolatedSmoothing
 from NGram.LaplaceSmoothing import LaplaceSmoothing
 from NGram.NGram import NGram
 
@@ -59,8 +58,8 @@ class RootFirstDisambiguation(NaiveDisambiguation):
                         self.igBiGramModel.addNGram(igs2)
         self.wordUniGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
         self.igUniGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
-        self.wordBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
-        self.igBiGramModel.calculateNGramProbabilitiesSimple(InterpolatedSmoothing(LaplaceSmoothing()))
+        self.wordBiGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
+        self.igBiGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
 
     def getWordProbability(self, word: Word, correctFsmParses: list, index: int) -> float:
         """
