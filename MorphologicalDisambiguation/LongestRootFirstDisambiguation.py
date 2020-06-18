@@ -34,8 +34,11 @@ class LongestRootFirstDisambiguation(MorphologicalDisambiguator):
         correctFsmParses = []
         for fsmParseList in fsmParses:
             bestParse = fsmParseList.getParseWithLongestRootWord()
-            if bestParse is not None:
-                correctFsmParses.append(bestParse)
+            fsmParseList.reduceToParsesWithSameRootAndPos(bestParse.getWordWithPos())
+            newBestParse = fsmParseList.caseDisambiguator()
+            if newBestParse is not None:
+                bestParse = newBestParse
+            correctFsmParses.append(bestParse)
         return correctFsmParses
 
     def saveModel(self):
