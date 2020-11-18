@@ -89,10 +89,13 @@ class RootWordStatistics:
         str
             The max value for the root word.
         """
-        rootWords = parseList.rootWords()
-        if rootWords in self.__statistics:
-            rootWordStatistics = self.__statistics[rootWords]
-            return rootWordStatistics.max(threshold)
+        surfaceForm = parseList.getFsmParse(0).getSurfaceForm()
+        if surfaceForm in self.__statistics:
+            rootWordStatistics = self.__statistics[surfaceForm]
+            rootWord = rootWordStatistics.max(threshold)
+            for i in range(parseList.size()):
+                if parseList.getFsmParse(i).getWord().getName() == rootWord:
+                    return rootWord
         return None
 
     def saveStatistics(self, fileName: str):
