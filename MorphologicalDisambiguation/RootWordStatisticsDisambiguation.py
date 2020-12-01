@@ -1,3 +1,4 @@
+from MorphologicalDisambiguation.AutoDisambiguator import AutoDisambiguator
 from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpus
 from MorphologicalDisambiguation.MorphologicalDisambiguator import MorphologicalDisambiguator
 from MorphologicalDisambiguation.RootWordStatistics import RootWordStatistics
@@ -35,11 +36,18 @@ class RootWordStatisticsDisambiguation(MorphologicalDisambiguator):
             CorrectFsmParses list.
         """
         correctFsmParses = []
+        i = 0
         for fsmParseList in fsmParses:
-            bestRoot = self.rootWordStatistics.bestRootWord(fsmParseList, 0.0)
+            rootWords = fsmParseList.rootWords()
+            if "$" in rootWords:
+                bestRoot = self.rootWordStatistics.bestRootWord(fsmParseList, 0.0)
+                if bestRoot is None:
+                    bestRoot = fsmParseList.getParseWithLongestRootWord().getWord().getName()
+            else:
+                bestRoot = rootWords
             if bestRoot is not None:
                 fsmParseList.reduceToParsesWithSameRoot(bestRoot)
-                newBestParse = fsmParseList.caseDisambiguator()
+                newBestParse = AutoDisambiguator.caseDisambiguator(i, fsmParses, correctFsmParses)
                 if newBestParse is not None:
                     bestParse = newBestParse
                 else:
@@ -47,6 +55,7 @@ class RootWordStatisticsDisambiguation(MorphologicalDisambiguator):
             else:
                 bestParse = fsmParseList.getFsmParse(0)
             correctFsmParses.append(bestParse)
+            i = i + 1
         return correctFsmParses
 
     def saveModel(self):

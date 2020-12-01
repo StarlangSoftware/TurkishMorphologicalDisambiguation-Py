@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='NlpToolkit-MorphologicalDisambiguation',
-    version='1.0.9',
+    version='1.0.10',
     packages=['MorphologicalDisambiguation'],
     url='https://github.com/olcaytaner/TurkishMorphologicalDisambiguation-Py',
     license='',

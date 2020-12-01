@@ -26,8 +26,8 @@ class LongestRootFirstDisambiguationTest(unittest.TestCase):
                         correctParse = correctParse + 1
                     if fsmParses[j].getWord() == word.getParse().getWord():
                         correctRoot = correctRoot + 1
-        self.assertAlmostEqual(0.8837, (correctRoot + 0.0) / corpus.numberOfWords(), 3)
-        self.assertAlmostEqual(0.7479, (correctParse + 0.0) / corpus.numberOfWords(), 3)
+        self.assertAlmostEqual(0.8829, (correctRoot + 0.0) / corpus.numberOfWords(), 3)
+        self.assertAlmostEqual(0.7900, (correctParse + 0.0) / corpus.numberOfWords(), 3)
 
 
 if __name__ == '__main__':

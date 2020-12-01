@@ -1,3 +1,4 @@
+from MorphologicalDisambiguation.AutoDisambiguator import AutoDisambiguator
 from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpus
 from MorphologicalDisambiguation.MorphologicalDisambiguator import MorphologicalDisambiguator
 
@@ -32,13 +33,15 @@ class LongestRootFirstDisambiguation(MorphologicalDisambiguator):
             CorrectFsmParses list.
         """
         correctFsmParses = []
+        i = 0
         for fsmParseList in fsmParses:
             bestParse = fsmParseList.getParseWithLongestRootWord()
             fsmParseList.reduceToParsesWithSameRootAndPos(bestParse.getWordWithPos())
-            newBestParse = fsmParseList.caseDisambiguator()
+            newBestParse = AutoDisambiguator.caseDisambiguator(i, fsmParses, correctFsmParses)
             if newBestParse is not None:
                 bestParse = newBestParse
             correctFsmParses.append(bestParse)
+            i = i + 1
         return correctFsmParses
 
     def saveModel(self):
