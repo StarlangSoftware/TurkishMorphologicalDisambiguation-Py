@@ -22,7 +22,7 @@ class DummyDisambiguationTest(unittest.TestCase):
             for j in range(corpus.getSentence(i).wordCount()):
                 word = corpus.getSentence(i).getWord(j)
                 if isinstance(word, DisambiguatedWord):
-                    if fsmParses[j].transitionList() == word.getParse().__str__():
+                    if fsmParses[j].transitionList().lower() == word.getParse().__str__().lower():
                         correctParse = correctParse + 1
                     if fsmParses[j].getWord() == word.getParse().getWord():
                         correctRoot = correctRoot + 1

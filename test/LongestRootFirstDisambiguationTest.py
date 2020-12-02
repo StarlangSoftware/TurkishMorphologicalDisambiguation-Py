@@ -22,12 +22,12 @@ class LongestRootFirstDisambiguationTest(unittest.TestCase):
             for j in range(corpus.getSentence(i).wordCount()):
                 word = corpus.getSentence(i).getWord(j)
                 if isinstance(word, DisambiguatedWord):
-                    if fsmParses[j].transitionList() == word.getParse().__str__():
+                    if fsmParses[j].transitionList().lower() == word.getParse().__str__().lower():
                         correctParse = correctParse + 1
                     if fsmParses[j].getWord() == word.getParse().getWord():
                         correctRoot = correctRoot + 1
         self.assertAlmostEqual(0.8829, (correctRoot + 0.0) / corpus.numberOfWords(), 3)
-        self.assertAlmostEqual(0.7900, (correctParse + 0.0) / corpus.numberOfWords(), 3)
+        self.assertAlmostEqual(0.7976, (correctParse + 0.0) / corpus.numberOfWords(), 3)
 
 
 if __name__ == '__main__':
