@@ -4,10 +4,10 @@ setup(
     name='NlpToolkit-MorphologicalDisambiguation',
     version='1.0.10',
     packages=['MorphologicalDisambiguation'],
-    url='https://github.com/olcaytaner/TurkishMorphologicalDisambiguation-Py',
+    url='https://github.com/StarlangSoftware/TurkishMorphologicalDisambiguation-Py',
     license='',
     author='olcay',
-    author_email='olcaytaner@isikun.edu.tr',
+    author_email='olcay.yildiz@ozyegin.edu.tr',
     description='Turkish Morphological Disambiguation Library',
     install_requires=['NlpToolkit-MorphologicalAnalysis', 'NlpToolkit-NGram']
 )
