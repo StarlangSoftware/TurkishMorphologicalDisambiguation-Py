@@ -76,8 +76,12 @@ MorphologicalDisambiguator provides Turkish morphological disambiguation. There 
 
         morphologicalDisambiguator = RootFirstDisambiguation()
 
-* Using `LongestRootFirstDisambiguation`, the one that chooses the root that is the most frequently used amongst the given analyses
+* Using `RootWordStatisticsDisambiguation`, the one that chooses the root that is the most frequently used amongst the given analyses
 
+        morphologicalDisambiguator = RootWordStatisticsDisambiguation()
+
+* Using `LongestRootFirstDisambiguation`, the one that chooses the longest root among the given roots
+        
         morphologicalDisambiguator = LongestRootFirstDisambiguation()
 
 * Using `HmmDisambiguation`, the one that chooses using an Hmm-based algorithm
