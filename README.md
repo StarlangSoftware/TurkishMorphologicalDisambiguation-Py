@@ -147,7 +147,7 @@ Output
 
 # Cite
 
-	@InProceedings{10.1007/978-1-4471-2155-8_9,
+	@InProceedings{gorgunyildiz12,
 	author="G{\"o}rg{\"u}n, Onur
 	and Yildiz, Olcay Taner",
 	editor="Gelenbe, Erol
