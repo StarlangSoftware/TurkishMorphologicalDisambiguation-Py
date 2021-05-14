@@ -1,6 +1,6 @@
 from random import randrange
 
-from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpus
+from DisambiguationCorpus.DisambiguationCorpus import DisambiguationCorpus
 from MorphologicalDisambiguation.MorphologicalDisambiguator import MorphologicalDisambiguator
 
 

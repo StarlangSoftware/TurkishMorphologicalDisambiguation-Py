@@ -1,5 +1,5 @@
 from MorphologicalDisambiguation.AutoDisambiguator import AutoDisambiguator
-from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpus
+from DisambiguationCorpus.DisambiguationCorpus import DisambiguationCorpus
 from MorphologicalDisambiguation.MorphologicalDisambiguator import MorphologicalDisambiguator
 from MorphologicalDisambiguation.RootWordStatistics import RootWordStatistics
 

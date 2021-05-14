@@ -4,8 +4,8 @@ from MorphologicalAnalysis.FsmParseList import FsmParseList
 from NGram.LaplaceSmoothing import LaplaceSmoothing
 from NGram.NGram import NGram
 
-from MorphologicalDisambiguation.DisambiguatedWord import DisambiguatedWord
-from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpus
+from DisambiguationCorpus.DisambiguatedWord import DisambiguatedWord
+from DisambiguationCorpus.DisambiguationCorpus import DisambiguationCorpus
 from MorphologicalDisambiguation.NaiveDisambiguation import NaiveDisambiguation
 
 

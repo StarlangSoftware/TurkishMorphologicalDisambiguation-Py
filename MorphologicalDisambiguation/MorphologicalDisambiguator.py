@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpus
+from DisambiguationCorpus.DisambiguationCorpus import DisambiguationCorpus
 
 
 class MorphologicalDisambiguator:

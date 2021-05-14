@@ -5,7 +5,7 @@ from MorphologicalAnalysis.FsmParse import FsmParse
 from NGram.LaplaceSmoothing import LaplaceSmoothing
 from NGram.NGram import NGram
 
-from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpus
+from DisambiguationCorpus.DisambiguationCorpus import DisambiguationCorpus
 from MorphologicalDisambiguation.NaiveDisambiguation import NaiveDisambiguation
 
 

@@ -1,9 +1,8 @@
 import unittest
 
 from MorphologicalAnalysis.FsmMorphologicalAnalyzer import FsmMorphologicalAnalyzer
-
-from MorphologicalDisambiguation.DisambiguatedWord import DisambiguatedWord
-from MorphologicalDisambiguation.DisambiguationCorpus import DisambiguationCorpus
+from DisambiguationCorpus.DisambiguationCorpus import DisambiguationCorpus
+from DisambiguationCorpus.DisambiguatedWord import DisambiguatedWord
 from MorphologicalDisambiguation.DummyDisambiguation import DummyDisambiguation
 
 
