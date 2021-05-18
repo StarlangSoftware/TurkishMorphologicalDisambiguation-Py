@@ -4,12 +4,10 @@ from MorphologicalAnalysis.FsmMorphologicalAnalyzer import FsmMorphologicalAnaly
 from MorphologicalAnalysis.FsmParse import FsmParse
 from MorphologicalAnalysis.FsmParseList import FsmParseList
 from MorphologicalAnalysis.MorphologicalTag import MorphologicalTag
-from MorphologicalDisambiguation.RootWordStatistics import RootWordStatistics
 
 
 class AutoDisambiguator:
     morphologicalAnalyzer: FsmMorphologicalAnalyzer
-    rootWordStatistics: RootWordStatistics
 
     @staticmethod
     def isAnyWordSecondPerson(index: int, correctParses: list) -> bool:
