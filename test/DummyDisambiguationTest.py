@@ -9,8 +9,7 @@ from MorphologicalDisambiguation.DummyDisambiguation import DummyDisambiguation
 class DummyDisambiguationTest(unittest.TestCase):
 
     def test_Disambiguation(self):
-        fsm = FsmMorphologicalAnalyzer("../turkish_dictionary.txt", "../turkish_misspellings.txt",
-                                       "../turkish_finite_state_machine.xml")
+        fsm = FsmMorphologicalAnalyzer()
         corpus = DisambiguationCorpus("../penntreebank.txt")
         algorithm = DummyDisambiguation()
         correctParse = 0

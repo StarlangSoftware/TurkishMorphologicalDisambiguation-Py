@@ -10,8 +10,7 @@ from MorphologicalDisambiguation.LongestRootFirstDisambiguation import LongestRo
 class LongestRootFirstDisambiguationTest(unittest.TestCase):
 
     def test_Disambiguation(self):
-        fsm = FsmMorphologicalAnalyzer("../turkish_dictionary.txt", "../turkish_misspellings.txt",
-                                       "../turkish_finite_state_machine.xml")
+        fsm = FsmMorphologicalAnalyzer()
         corpus = DisambiguationCorpus("../penntreebank.txt")
         algorithm = LongestRootFirstDisambiguation()
         correctParse = 0

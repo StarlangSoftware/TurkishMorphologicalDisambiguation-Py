@@ -10,8 +10,7 @@ from MorphologicalDisambiguation.RootFirstDisambiguation import RootFirstDisambi
 class RootFirstDisambiguationTest(unittest.TestCase):
 
     def test_Disambiguation(self):
-        fsm = FsmMorphologicalAnalyzer("../turkish_dictionary.txt", "../turkish_misspellings.txt",
-                                       "../turkish_finite_state_machine.xml")
+        fsm = FsmMorphologicalAnalyzer()
         corpus = DisambiguationCorpus("../penntreebank.txt")
         algorithm = RootFirstDisambiguation()
         algorithm.train(corpus)
