@@ -11,8 +11,8 @@ from MorphologicalDisambiguation.NaiveDisambiguation import NaiveDisambiguation
 
 class RootFirstDisambiguation(NaiveDisambiguation):
 
-    wordBiGramModel: NGram
-    igBiGramModel: NGram
+    word_bi_gram_model: NGram
+    ig_bi_gram_model: NGram
 
     def train(self, corpus: DisambiguationCorpus):
         """
@@ -37,31 +37,34 @@ class RootFirstDisambiguation(NaiveDisambiguation):
         igs1 = [None]
         words2 = [None, None]
         igs2 = [None, None]
-        self.wordUniGramModel = NGram(1)
-        self.wordBiGramModel = NGram(2)
-        self.igUniGramModel = NGram(1)
-        self.igBiGramModel = NGram(2)
+        self.word_uni_gram_model = NGram(1)
+        self.word_bi_gram_model = NGram(2)
+        self.ig_uni_gram_model = NGram(1)
+        self.ig_bi_gram_model = NGram(2)
         for sentence in corpus.sentences:
             for j in range(sentence.wordCount()):
                 word = sentence.getWord(j)
                 if isinstance(word, DisambiguatedWord):
                     words1[0] = word.getParse().getWordWithPos()
-                    self.wordUniGramModel.addNGram(words1)
+                    self.word_uni_gram_model.addNGram(words1)
                     igs1[0] = Word(word.getParse().getTransitionList())
-                    self.igUniGramModel.addNGram(igs1)
+                    self.ig_uni_gram_model.addNGram(igs1)
                     if j + 1 < sentence.wordCount():
                         words2[0] = words1[0]
                         words2[1] = sentence.getWord(j + 1).getParse().getWordWithPos()
-                        self.wordBiGramModel.addNGram(words2)
+                        self.word_bi_gram_model.addNGram(words2)
                         igs2[0] = igs1[0]
                         igs2[1] = Word(sentence.getWord(j + 1).getParse().getTransitionList())
-                        self.igBiGramModel.addNGram(igs2)
-        self.wordUniGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
-        self.igUniGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
-        self.wordBiGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
-        self.igBiGramModel.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
+                        self.ig_bi_gram_model.addNGram(igs2)
+        self.word_uni_gram_model.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
+        self.ig_uni_gram_model.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
+        self.word_bi_gram_model.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
+        self.ig_bi_gram_model.calculateNGramProbabilitiesSimple(LaplaceSmoothing())
 
-    def getWordProbability(self, word: Word, correctFsmParses: list, index: int) -> float:
+    def getWordProbability(self,
+                           word: Word,
+                           correctFsmParses: list,
+                           index: int) -> float:
         """
         The getWordProbability method returns the probability of a word by using word bigram or unigram model.
 
@@ -80,11 +83,14 @@ class RootFirstDisambiguation(NaiveDisambiguation):
             The probability of the given word.
         """
         if index != 0 and len(correctFsmParses) == index:
-            return self.wordBiGramModel.getProbability(correctFsmParses[index - 1].getWordWithPos(), word)
+            return self.word_bi_gram_model.getProbability(correctFsmParses[index - 1].getWordWithPos(), word)
         else:
-            return self.wordUniGramModel.getProbability(word)
+            return self.word_uni_gram_model.getProbability(word)
 
-    def getIgProbability(self, word: Word, correctFsmParses: list, index: int) -> float:
+    def getIgProbability(self,
+                         word: Word,
+                         correctFsmParses: list,
+                         index: int) -> float:
         """
         The getIgProbability method returns the probability of a word by using ig bigram or unigram model.
 
@@ -103,9 +109,9 @@ class RootFirstDisambiguation(NaiveDisambiguation):
             The probability of the given word.
         """
         if index != 0 and len(correctFsmParses) == index:
-            return self.igBiGramModel.getProbability(Word(correctFsmParses[index - 1].getTransitionList()), word)
+            return self.ig_bi_gram_model.getProbability(Word(correctFsmParses[index - 1].getTransitionList()), word)
         else:
-            return self.igUniGramModel.getProbability(word)
+            return self.ig_uni_gram_model.getProbability(word)
 
     def getBestRootWord(self, fsmParseList: FsmParseList) -> Word:
         """
@@ -123,20 +129,23 @@ class RootFirstDisambiguation(NaiveDisambiguation):
         Word
             The word with the highest probability.
         """
-        bestProbability = -1
-        bestWord = None
+        best_probability = -1
+        best_word = None
         for j in range(fsmParseList.size()):
             word = fsmParseList.getFsmParse(j).getWordWithPos()
             ig = Word(fsmParseList.getFsmParse(j).getTransitionList())
-            wordProbability = self.wordUniGramModel.getProbability(word)
-            igProbability = self.igUniGramModel.getProbability(ig)
-            probability = wordProbability * igProbability
-            if probability > bestProbability:
-                bestWord = word
-                bestProbability = probability
-        return bestWord
+            word_probability = self.word_uni_gram_model.getProbability(word)
+            ig_probability = self.ig_uni_gram_model.getProbability(ig)
+            probability = word_probability * ig_probability
+            if probability > best_probability:
+                best_word = word
+                best_probability = probability
+        return best_word
 
-    def getParseWithBestIgProbability(self, parseList: FsmParseList, correctFsmParses: list, index: int) -> FsmParse:
+    def getParseWithBestIgProbability(self,
+                                      parseList: FsmParseList,
+                                      correctFsmParses: list,
+                                      index: int) -> FsmParse:
         """
         The getParseWithBestIgProbability gets each FsmParse's transition list as a Word ig. Then, finds the
         corresponding probability. At the end returns the parse with the highest ig probability.
@@ -155,15 +164,15 @@ class RootFirstDisambiguation(NaiveDisambiguation):
         FsmParse
             The parse with the highest probability.
         """
-        bestParse = None
-        bestProbability = -1
+        best_parse = None
+        best_probability = -1
         for j in range(parseList.size()):
             ig = Word(parseList.getFsmParse(j).getTransitionList())
             probability = self.getIgProbability(ig, correctFsmParses, index)
-            if probability > bestProbability:
-                bestParse = parseList.getFsmParse(j)
-                bestProbability = probability
-        return bestParse
+            if probability > best_probability:
+                best_parse = parseList.getFsmParse(j)
+                best_probability = probability
+        return best_parse
 
     def disambiguate(self, fsmParses: list) -> list:
         """
@@ -181,27 +190,27 @@ class RootFirstDisambiguation(NaiveDisambiguation):
         list
             CcorrectFsmParses list which holds the most probable parses.
         """
-        correctFsmParses = []
+        correct_fsm_parses = []
         for i in range(len(fsmParses)):
-            bestWord = self.getBestRootWord(fsmParses[i])
-            fsmParses[i].reduceToParsesWithSameRootAndPos(bestWord)
-            bestParse = self.getParseWithBestIgProbability(fsmParses[i], correctFsmParses, i)
-            if bestParse is not None:
-                correctFsmParses.append(bestParse)
-        return correctFsmParses
+            best_word = self.getBestRootWord(fsmParses[i])
+            fsmParses[i].reduceToParsesWithSameRootAndPos(best_word)
+            best_parse = self.getParseWithBestIgProbability(fsmParses[i], correct_fsm_parses, i)
+            if best_parse is not None:
+                correct_fsm_parses.append(best_parse)
+        return correct_fsm_parses
 
     def saveModel(self):
         """
         Method to save unigrams and bigrams.
         """
         super().saveModel()
-        self.wordBiGramModel.saveAsText("words2.txt")
-        self.igBiGramModel.saveAsText("igs2.txt")
+        self.word_bi_gram_model.saveAsText("words2.txt")
+        self.ig_bi_gram_model.saveAsText("igs2.txt")
 
     def loadModel(self):
         """
         Method to load unigrams and bigrams.
         """
         super().loadModel()
-        self.wordBiGramModel = NGram("words2.txt")
-        self.igBiGramModel = NGram("igs2.txt")
+        self.word_bi_gram_model = NGram("words2.txt")
+        self.ig_bi_gram_model = NGram("igs2.txt")

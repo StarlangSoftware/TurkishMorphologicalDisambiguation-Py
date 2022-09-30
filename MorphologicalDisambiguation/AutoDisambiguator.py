@@ -7,10 +7,11 @@ from MorphologicalAnalysis.MorphologicalTag import MorphologicalTag
 
 
 class AutoDisambiguator:
-    morphologicalAnalyzer: FsmMorphologicalAnalyzer
+    morphological_analyzer: FsmMorphologicalAnalyzer
 
     @staticmethod
-    def isAnyWordSecondPerson(index: int, correctParses: list) -> bool:
+    def isAnyWordSecondPerson(index: int,
+                              correctParses: list) -> bool:
         count = 0
         for i in range(index - 1, -1, -1):
             if correctParses[i].containsTag(MorphologicalTag.A2SG) or \
@@ -19,7 +20,8 @@ class AutoDisambiguator:
         return count >= 1
 
     @staticmethod
-    def isPossessivePlural(index: int, correctParses: list) -> bool:
+    def isPossessivePlural(index: int,
+                           correctParses: list) -> bool:
         for i in range(index - 1, -1, -1):
             if correctParses[i].isNoun():
                 return correctParses[i].isPlural()
@@ -33,23 +35,28 @@ class AutoDisambiguator:
         return _map.max()
 
     @staticmethod
-    def isBeforeLastWord(index: int, fsmParses: list) -> bool:
+    def isBeforeLastWord(index: int,
+                         fsmParses: list) -> bool:
         return index + 2 == len(fsmParses)
 
     @staticmethod
-    def nextWordExists(index: int, fsmParses: list) -> bool:
+    def nextWordExists(index: int,
+                       fsmParses: list) -> bool:
         return index + 1 < len(fsmParses)
 
     @staticmethod
-    def isNextWordNoun(index: int, fsmParses: list) -> bool:
+    def isNextWordNoun(index: int,
+                       fsmParses: list) -> bool:
         return index + 1 < len(fsmParses) and AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "NOUN"
 
     @staticmethod
-    def isNextWordNum(index: int, fsmParses: list) -> bool:
+    def isNextWordNum(index: int,
+                      fsmParses: list) -> bool:
         return index + 1 < len(fsmParses) and AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "NUM"
 
     @staticmethod
-    def isNextWordNounOrAdjective(index: int, fsmParses: list) -> bool:
+    def isNextWordNounOrAdjective(index: int,
+                                  fsmParses: list) -> bool:
         return index + 1 < len(fsmParses) and (AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "NOUN" or
                                                AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "ADJ" or
                                                AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "DET")
@@ -59,23 +66,29 @@ class AutoDisambiguator:
         return index == 0
 
     @staticmethod
-    def containsTwoNeOrYa(fsmParses: list, word: str) -> bool:
+    def containsTwoNeOrYa(fsmParses: list,
+                          word: str) -> bool:
         count = 0
-        for fsmPars in fsmParses:
-            surfaceForm = fsmPars.getFsmParse(0).getSurfaceForm()
-            if surfaceForm == word:
+        for fsm_parse in fsmParses:
+            surface_form = fsm_parse.getFsmParse(0).getSurfaceForm()
+            if surface_form == word:
                 count = count + 1
         return count == 2
 
     @staticmethod
-    def hasPreviousWordTag(index: int, correctParses: list, tag: MorphologicalTag) -> bool:
+    def hasPreviousWordTag(index: int,
+                           correctParses: list,
+                           tag: MorphologicalTag) -> bool:
         return index > 0 and correctParses[index - 1].containsTag(tag)
 
     @staticmethod
-    def selectCaseForParseString(parseString: str, index: int, fsmParses: list, correctParses: list) -> str:
-        surfaceForm = fsmParses[index].getFsmParse(0).getSurfaceForm()
+    def selectCaseForParseString(parseString: str,
+                                 index: int,
+                                 fsmParses: list,
+                                 correctParses: list) -> str:
+        surface_form = fsmParses[index].getFsmParse(0).getSurfaceForm()
         root = fsmParses[index].getFsmParse(0).getWord().getName()
-        lastWord = fsmParses[len(fsmParses) - 1].getFsmParse(0).getSurfaceForm()
+        last_word = fsmParses[len(fsmParses) - 1].getFsmParse(0).getSurfaceForm()
         # kısmını, duracağını, grubunun #
         if parseString == "P2SG$P3SG":
             if AutoDisambiguator.isAnyWordSecondPerson(index, correctParses):
@@ -247,7 +260,7 @@ class AutoDisambiguator:
             return "POS+PROG2"
             # NE #
         elif parseString == "ADJ$ADV$CONJ$PRON+QUESP+A3SG+PNON+NOM":
-            if lastWord == "?":
+            if last_word == "?":
                 return "PRON+QUESP+A3SG+PNON+NOM"
             if AutoDisambiguator.containsTwoNeOrYa(fsmParses, "ne"):
                 return "CONJ"
@@ -266,7 +279,7 @@ class AutoDisambiguator:
             return "ADV"
             # görülmedik #
         elif parseString == "NEG+PAST+A1PL$NEG^DB+ADJ+PASTPART+PNON$NEG^DB+NOUN+PASTPART+A3SG+PNON+NOM":
-            if surfaceForm == "alışılmadık":
+            if surface_form == "alışılmadık":
                 return "NEG^DB+ADJ+PASTPART+PNON"
             return "NEG+PAST+A1PL"
         elif parseString == "DATE$NUM+FRACTION":
@@ -382,14 +395,14 @@ class AutoDisambiguator:
                 return "NOUN+PROP+A3SG+PNON+NOM"
             # GEÇ, SIK #
         elif parseString == "ADJ$ADV$VERB+POS+IMP+A2SG":
-            if surfaceForm == "sık":
-                previousWord = ""
-                nextWord = ""
+            if surface_form == "sık":
+                previous_word = ""
+                next_word = ""
                 if index - 1 > -1:
-                    previousWord = fsmParses[index - 1].getFsmParse(0).getSurfaceForm()
+                    previous_word = fsmParses[index - 1].getFsmParse(0).getSurfaceForm()
                 if index + 1 < len(fsmParses):
-                    nextWord = fsmParses[index + 1].getFsmParse(0).getSurfaceForm()
-                if previousWord == "sık" or nextWord == "sık":
+                    next_word = fsmParses[index + 1].getFsmParse(0).getSurfaceForm()
+                if previous_word == "sık" or next_word == "sık":
                     return "ADV"
                 if AutoDisambiguator.isNextWordNoun(index, fsmParses):
                     return "ADJ"
@@ -559,7 +572,7 @@ class AutoDisambiguator:
             return "VERB+POS^DB+NOUN+INF2+A3SG+PNON+NOM"
             # HANGİ #
         elif parseString == "ADJ$PRON+QUESP+A3SG+PNON+NOM":
-            if lastWord == "?":
+            if last_word == "?":
                 return "PRON+QUESP+A3SG+PNON+NOM"
             return "ADJ"
             # GÜCÜNÜ, GÜCÜNÜN, ESASINDA #
@@ -650,7 +663,7 @@ class AutoDisambiguator:
             return "NOUN+FUTPART+A3PL+P3SG+NOM"
             # KİM #
         elif parseString == "NOUN+PROP$PRON+QUESP":
-            if lastWord == "?":
+            if last_word == "?":
                 return "PRON+QUESP"
             return "NOUN+PROP"
             # ALINDI #
@@ -787,12 +800,12 @@ class AutoDisambiguator:
         return None
 
     def caseDisambiguator(index: int, fsmParses: list, correctParses: list) -> FsmParse:
-        fsmParseList = fsmParses[index]
-        defaultCase = AutoDisambiguator.selectCaseForParseString(fsmParses[index].parsesWithoutPrefixAndSuffix(), index,
+        fsm_parse_list = fsmParses[index]
+        default_case = AutoDisambiguator.selectCaseForParseString(fsmParses[index].parsesWithoutPrefixAndSuffix(), index,
                                                                  fsmParses, correctParses)
-        if defaultCase is not None:
-            for i in range(fsmParseList.size()):
-                fsmParse = fsmParseList.getFsmParse(i)
-                if defaultCase in fsmParse.transitionList():
-                    return fsmParse
+        if default_case is not None:
+            for i in range(fsm_parse_list.size()):
+                fsm_parse = fsm_parse_list.getFsmParse(i)
+                if default_case in fsm_parse.transitionList():
+                    return fsm_parse
         return None
