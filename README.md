@@ -54,7 +54,7 @@ Video Lectures
 For Developers
 ============
 
-You can also see [Cython](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-Cy), [Java](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation), [C++](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-CPP), 
+You can also see [Cython](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-Cy), [Java](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation), [C++](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-CPP), [C](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-C), 
 [Js](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-Js), [Swift](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-Swift), or [C#](https://github.com/starlangsoftware/TurkishMorphologicalDisambiguation-CS) repository.
 
 ## Requirements
