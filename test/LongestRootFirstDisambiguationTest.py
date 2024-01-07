@@ -17,7 +17,7 @@ class LongestRootFirstDisambiguationTest(unittest.TestCase):
         correctRoot = 0
         for i in range(corpus.sentenceCount()):
             sentenceAnalyses = fsm.robustMorphologicalAnalysis(corpus.getSentence(i))
-            fsmParses =  algorithm.disambiguate(sentenceAnalyses)
+            fsmParses = algorithm.disambiguate(sentenceAnalyses)
             for j in range(corpus.getSentence(i).wordCount()):
                 word = corpus.getSentence(i).getWord(j)
                 if isinstance(word, DisambiguatedWord):
