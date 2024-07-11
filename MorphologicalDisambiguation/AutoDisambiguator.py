@@ -12,6 +12,14 @@ class AutoDisambiguator:
     @staticmethod
     def isAnyWordSecondPerson(index: int,
                               correctParses: list) -> bool:
+        """
+        Checks if there is any singular second person agreement or possessor tag before the current word at position
+        index.
+        :param index: Position of the current word.
+        :param correctParses: All correct morphological parses of the previous words.
+        :return: True, if at least one of the morphological parses of the previous words has a singular second person
+        agreement or possessor tag, false otherwise.
+        """
         count = 0
         for i in range(index - 1, -1, -1):
             if correctParses[i].containsTag(MorphologicalTag.A2SG) or \
@@ -22,6 +30,13 @@ class AutoDisambiguator:
     @staticmethod
     def isPossessivePlural(index: int,
                            correctParses: list) -> bool:
+        """
+        Checks if there is any plural agreement or possessor tag before the current word at position index.
+        :param index: Position of the current word.
+        :param correctParses: All correct morphological parses of the previous words.
+        :return: True, if at least one of the morphological parses of the previous words has a plural agreement or
+        possessor tag, false otherwise.
+        """
         for i in range(index - 1, -1, -1):
             if correctParses[i].isNoun():
                 return correctParses[i].isPlural()
@@ -29,6 +44,11 @@ class AutoDisambiguator:
 
     @staticmethod
     def nextWordPos(nextParseList: FsmParseList) -> str:
+        """
+        Given all possible parses of the next word, this method returns the most frequent pos tag.
+        :param nextParseList: All possible parses of the next word.
+        :return: Most frequent pos tag in all possible parses of the next word.
+        """
         _map = CounterHashMap()
         for i in range(nextParseList.size()):
             _map.put(nextParseList.getFsmParse(i).getPos())
@@ -37,11 +57,23 @@ class AutoDisambiguator:
     @staticmethod
     def isBeforeLastWord(index: int,
                          fsmParses: list) -> bool:
+        """
+        Checks if the current word is just before the last word.
+        :param index: Position of the current word.
+        :param fsmParses: All morphological parses of the current sentence.
+        :return: True, if the current word is just before the last word, false otherwise.
+        """
         return index + 2 == len(fsmParses)
 
     @staticmethod
     def nextWordExists(index: int,
                        fsmParses: list) -> bool:
+        """
+        Checks if there is at least one word after the current word.
+        :param index: Position of the current word.
+        :param fsmParses: All morphological parses of the current sentence.
+        :return: True, if there is at least one word after the current word, false otherwise.
+        """
         return index + 1 < len(fsmParses)
 
     @staticmethod
@@ -52,22 +84,47 @@ class AutoDisambiguator:
     @staticmethod
     def isNextWordNum(index: int,
                       fsmParses: list) -> bool:
+        """
+        Checks if there is at least one word after the current word and that next word is a number.
+        :param index: Position of the current word.
+        :param fsmParses: All morphological parses of the current sentence.
+        :return: True, if there is at least one word after the current word and that next word is a number, false
+        otherwise.
+        """
         return index + 1 < len(fsmParses) and AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "NUM"
 
     @staticmethod
     def isNextWordNounOrAdjective(index: int,
                                   fsmParses: list) -> bool:
+        """
+        Checks if there is at least one word after the current word and that next word is a noun or adjective.
+        :param index: Position of the current word.
+        :param fsmParses: All morphological parses of the current sentence.
+        :return: True, if there is at least one word after the current word and that next word is a noun or adjective,
+        false otherwise.
+        """
         return index + 1 < len(fsmParses) and (AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "NOUN" or
                                                AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "ADJ" or
                                                AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "DET")
 
     @staticmethod
     def isFirstWord(index: int) -> bool:
+        """
+        Checks if the current word is the first word of the sentence or not.
+        :param index: Position of the current word.
+        :return: True, if the current word is the first word of the sentence, false otherwise.
+        """
         return index == 0
 
     @staticmethod
     def containsTwoNeOrYa(fsmParses: list,
                           word: str) -> bool:
+        """
+        Checks if there are at least two occurrences of 'ne', 'ya' or 'gerek' in the sentence.
+        :param fsmParses: All morphological parses of the current sentence.
+        :param word: 'ne', 'ya' or 'gerek'
+        :return: True, if there are at least two occurrences of 'ne', 'ya' or 'gerek' in the sentence, false otherwise.
+        """
         count = 0
         for fsm_parse in fsmParses:
             surface_form = fsm_parse.getFsmParse(0).getSurfaceForm()
@@ -79,6 +136,14 @@ class AutoDisambiguator:
     def hasPreviousWordTag(index: int,
                            correctParses: list,
                            tag: MorphologicalTag) -> bool:
+        """
+        Checks if there is at least one word before the given word and its pos tag is the given pos tag.
+        :param index: Position of the current word.
+        :param correctParses: All correct morphological parses of the previous words.
+        :param tag: Pos tag of the previous word
+        :return: True, if there is at least one word before the given word and its pos tag is the given pos tag, false
+        otherwise.
+        """
         return index > 0 and correctParses[index - 1].containsTag(tag)
 
     @staticmethod
@@ -86,6 +151,17 @@ class AutoDisambiguator:
                                  index: int,
                                  fsmParses: list,
                                  correctParses: list) -> str:
+        """
+        Given the disambiguation parse string, position of the current word in the sentence, all morphological parses of
+        all words in the sentence and all correct morphological parses of the previous words, the algorithm determines
+        the correct morphological parse of the current word in rule based manner.
+        :param parseString: Disambiguation parse string. The string contains distinct subparses for the given word for a
+                            determined root word. The subparses are separated with '$'.
+        :param index: Position of the current word.
+        :param fsmParses: All morphological parses of the current sentence.
+        :param correctParses: All correct morphological parses of the previous words.
+        :return: Correct morphological subparse of the current word.
+        """
         surface_form = fsmParses[index].getFsmParse(0).getSurfaceForm()
         root = fsmParses[index].getFsmParse(0).getWord().getName()
         last_word = fsmParses[len(fsmParses) - 1].getFsmParse(0).getSurfaceForm()
@@ -799,7 +875,17 @@ class AutoDisambiguator:
             return "INF2+A3SG+P3SG+NOM"
         return None
 
+    @staticmethod
     def caseDisambiguator(index: int, fsmParses: list, correctParses: list) -> FsmParse:
+        """
+        Given the position of the current word in the sentence, all morphological parses of all words in the sentence and
+        all correct morphological parses of the previous words, the algorithm determines the correct morphological parse
+        of the current word in rule based manner.
+        :param index: Position of the current word.
+        :param fsmParses: All morphological parses of the current sentence.
+        :param correctParses: All correct morphological parses of the previous words.
+        :return: Correct morphological parse of the current word.
+        """
         fsm_parse_list = fsmParses[index]
         default_case = AutoDisambiguator.selectCaseForParseString(fsmParses[index].parsesWithoutPrefixAndSuffix(), index,
                                                                  fsmParses, correctParses)

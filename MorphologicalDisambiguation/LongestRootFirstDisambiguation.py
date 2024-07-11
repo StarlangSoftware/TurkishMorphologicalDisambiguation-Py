@@ -10,6 +10,11 @@ class LongestRootFirstDisambiguation(MorphologicalDisambiguator):
     root_list : dict
 
     def __init__(self, fileName=None):
+        """
+        Constructor for the longest root first disambiguation algorithm. The method reads a list of (surface form, most
+        frequent root word for that surface form) pairs from a given file.
+        :param fileName: File that contains list of (surface form, most frequent root word for that surface form) pairs.
+        """
         self.root_list = {}
         if fileName is None:
             self.__readFromFile(pkg_resources.resource_filename(__name__, 'data/rootlist.txt'))
@@ -17,6 +22,10 @@ class LongestRootFirstDisambiguation(MorphologicalDisambiguator):
             self.__readFromFile(fileName)
 
     def __readFromFile(self, fileName: str):
+        """
+        Reads the list of (surface form, most frequent root word for that surface form) pairs from a given file.
+        :param fileName: Input file name.
+        """
         input_file = open(fileName, "r", encoding="utf8")
         lines = input_file.readlines()
         for line in lines:
