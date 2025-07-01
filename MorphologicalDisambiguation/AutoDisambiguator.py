@@ -79,6 +79,13 @@ class AutoDisambiguator:
     @staticmethod
     def isNextWordNoun(index: int,
                        fsmParses: list) -> bool:
+        """
+        Checks if there is at least one word after the current word and that next word is a noun.
+        :param index: Position of the current word.
+        :param fsmParses: All morphological parses of the current sentence.
+        :return: True, if there is at least one word after the current word and that next word is a noun, false
+        otherwise.
+        """
         return index + 1 < len(fsmParses) and AutoDisambiguator.nextWordPos(fsmParses[index + 1]) == "NOUN"
 
     @staticmethod
