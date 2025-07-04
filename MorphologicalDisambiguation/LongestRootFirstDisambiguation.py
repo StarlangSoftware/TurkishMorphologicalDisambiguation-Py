@@ -7,7 +7,7 @@ from MorphologicalDisambiguation.MorphologicalDisambiguator import Morphological
 
 class LongestRootFirstDisambiguation(MorphologicalDisambiguator):
 
-    root_list : dict
+    root_list : dict[str, str]
 
     def __init__(self, fileName=None):
         """
