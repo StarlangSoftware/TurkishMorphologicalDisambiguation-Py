@@ -11,7 +11,7 @@ class LongestRootFirstDisambiguationTest(unittest.TestCase):
 
     def test_Disambiguation(self):
         fsm = FsmMorphologicalAnalyzer()
-        corpus = DisambiguationCorpus("../datasets/pud.txt")
+        corpus = DisambiguationCorpus("../datasets/imst.txt")
         algorithm = LongestRootFirstDisambiguation()
         correctParse = 0
         correctRoot = 0
@@ -23,7 +23,9 @@ class LongestRootFirstDisambiguationTest(unittest.TestCase):
                 if isinstance(word, DisambiguatedWord):
                     if fsmParses[j].transitionList().lower() == word.getParse().__str__().lower():
                         correctParse = correctParse + 1
-                    if fsmParses[j].getWord() == word.getParse().getWord():
+                        correctRoot = correctRoot + 1
+                    elif fsmParses[j].getWord() == word.getParse().getWord():
+                        print(word.getName())
                         correctRoot = correctRoot + 1
         print((correctRoot + 0.0) / corpus.numberOfWords())
         print((correctParse + 0.0) / corpus.numberOfWords())

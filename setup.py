@@ -5,8 +5,8 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
-    name='NlpToolkit-MorphologicalDisambiguation',
-    version='1.0.17',
+    name='nlptoolkit_morphologicaldisambiguation',
+    version='1.0.18',
     packages=['MorphologicalDisambiguation', 'MorphologicalDisambiguation.data'],
     package_data={'MorphologicalDisambiguation.data': ['*.txt']},
     url='https://github.com/StarlangSoftware/TurkishMorphologicalDisambiguation-Py',
