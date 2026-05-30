@@ -73,7 +73,7 @@ You can also see [Cython](https://github.com/starlangsoftware/TurkishMorphologic
 
 ## Requirements
 
-* [Python 3.7 or higher](#python)
+* [Python 3.13 or higher](#python)
 * [Git](#git)
 
 ### Python 
@@ -90,7 +90,7 @@ Install the [latest version of Git](https://git-scm.com/book/en/v2/Getting-Start
 
 ## Pip Install
 
-	pip3 install NlpToolkit-MorphologicalDisambiguation
+	pip3.13 install NlpToolkit-MorphologicalDisambiguation
 
 ## Download Code
 
@@ -109,7 +109,7 @@ Steps for opening the cloned project:
 
 * Start IDE
 * Select **File | Open** from main menu
-* Choose `DataStructure-Py` file
+* Choose `MorphologicalDisambiguation-Py` file
 * Select open as project option
 * Couple of seconds, project will be downloaded. 
 
